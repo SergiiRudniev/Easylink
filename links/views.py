@@ -4,8 +4,13 @@ from rest_framework import viewsets, permissions
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from .models import ShortLink, Click
-from .serializers import ShortLinkSerializer
+from .models import ShortLink, Click, LinkGroup, Domain, Pixel
+from .serializers import (
+    ShortLinkSerializer,
+    LinkGroupSerializer,
+    DomainSerializer,
+    PixelSerializer,
+)
 
 
 class ShortLinkViewSet(viewsets.ModelViewSet):
@@ -14,6 +19,39 @@ class ShortLinkViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return ShortLink.objects.filter(user=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
+class LinkGroupViewSet(viewsets.ModelViewSet):
+    serializer_class = LinkGroupSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return LinkGroup.objects.filter(user=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
+class DomainViewSet(viewsets.ModelViewSet):
+    serializer_class = DomainSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return Domain.objects.filter(user=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
+class PixelViewSet(viewsets.ModelViewSet):
+    serializer_class = PixelSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return Pixel.objects.filter(user=self.request.user)
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
